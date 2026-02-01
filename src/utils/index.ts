@@ -1,3 +1,5 @@
+import type { AsyncController } from "./helper.js";
+
 export const getEnv = (key: string, defaultValue?: string): string => {
   const value = process.env[key] || defaultValue;
 
@@ -7,3 +9,13 @@ export const getEnv = (key: string, defaultValue?: string): string => {
 
   return value;
 };
+
+export const catchErrors =
+  (controller: AsyncController): AsyncController =>
+  async (req, res, next) => {
+    try {
+      await controller(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
